@@ -23,6 +23,9 @@ type Transaction(id : Guid, currency : String, posted : DateTime, entered : Date
 
 type TransactionParser() = 
     member this.Parse(xml) =
+        xml |> XElement.Parse |> this.ParseElement
+
+    member this.ParseElement(xtransaction : XElement) =
         let parseMoney = fun (value : string) ->
             let parts       = value.Split '/'
             let divisible   = parts.[0] |> Decimal.Parse
@@ -39,8 +42,6 @@ type TransactionParser() =
         let parseDate = fun (dateString : string) ->
             DateTime.ParseExact(dateString, "yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture)
 
-        let xtransaction = XElement.Parse(xml)
-        
         let id          = xtransaction |> Value TransactionId           |> Guid.Parse
         let posted      = xtransaction |> Value TransactionPosted       |> parseDate
         let entered     = xtransaction |> Value TransactionEntered      |> parseDate

@@ -328,6 +328,7 @@ namespace GnuCashParser.Tests
             CheckIf.EqualId("3dd199f14b9d79e170caa4653fa152f2", book.Id, "Book id should be parsed");
 
             List<Account> accounts = book.Accounts;
+            List<Transaction> transactions = book.Transactions;
         }
     }
 }

@@ -4,8 +4,9 @@ open System
 open System.Xml.Linq
 
 module Xml =
-    let XBook    = XName.Get("book", "http://www.gnucash.org/XML/gnc")
-    let XAccount = XName.Get("account", "http://www.gnucash.org/XML/gnc")
+    let XBook           = XName.Get("book", "http://www.gnucash.org/XML/gnc")
+    let XAccount        = XName.Get("account", "http://www.gnucash.org/XML/gnc")
+    let XTransaction    = XName.Get("transaction", "http://www.gnucash.org/XML/gnc")
 
     let BookId              = XName.Get("id", "http://www.gnucash.org/XML/book")
     let CommodityId         = XName.Get("id", "http://www.gnucash.org/XML/cmdty")
