@@ -4,6 +4,7 @@ open System
 open System.Collections.Generic
 open System.Linq
 open System.Xml.Linq
+open Xml
 
 type Book(id, accounts) =
     member this.Id = id
@@ -15,11 +16,11 @@ type BookParser() =
             let accountParser = new AccountParser()
             accountParser.ParseElement(xaccount)
 
-        let xbook       = XDocument.Parse(xml).Root.Element(XNames.Book)
-        let id          = xbook.Element(XNames.BookId).Value |> Guid.Parse
-        let xaccounts   = xbook.Elements(XNames.Account)
+        let xbook       = XDocument.Parse(xml).Root |> Element XBook
+        let id          = xbook |> Value BookId |> Guid.Parse
+        let xaccounts   = xbook |> Elements XAccount |> Seq.map parseAccount
 
         new Book(
             id,
-            xaccounts.Select(parseAccount).ToList())
+            xaccounts.ToList())
 

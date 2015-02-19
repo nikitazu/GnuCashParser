@@ -5,6 +5,7 @@ open System.Collections.Generic
 open System.Globalization
 open System.Linq
 open System.Xml.Linq
+open Xml
 
 type TransactionSplit(id : Guid, accountId : Guid, value : Decimal, quantity : Decimal) =
     member this.Id = id
@@ -23,16 +24,16 @@ type Transaction(id : Guid, currency : String, posted : DateTime, entered : Date
 type TransactionParser() = 
     member this.Parse(xml) =
         let parseMoney = fun (value : string) ->
-            let parts = value.Split('/')
-            let divisible = Decimal.Parse(parts.[0])
-            let divisor = Decimal.Parse(parts.[1])
+            let parts       = value.Split '/'
+            let divisible   = parts.[0] |> Decimal.Parse
+            let divisor     = parts.[1] |> Decimal.Parse
             divisible / divisor
             
         let parseSplit = fun (xsplit : XElement) ->
-            let id          = xsplit.Element(XNames.SplitId).Value         |> Guid.Parse
-            let accountId   = xsplit.Element(XNames.SplitAccount).Value    |> Guid.Parse
-            let value       = xsplit.Element(XNames.SplitValue).Value      |> parseMoney
-            let quantity    = xsplit.Element(XNames.SplitQuantity).Value   |> parseMoney
+            let id          = xsplit |> Value SplitId       |> Guid.Parse
+            let accountId   = xsplit |> Value SplitAccount  |> Guid.Parse
+            let value       = xsplit |> Value SplitValue    |> parseMoney
+            let quantity    = xsplit |> Value SplitQuantity |> parseMoney
             new TransactionSplit(id, accountId, value, quantity)
 
         let parseDate = fun (dateString : string) ->
@@ -40,13 +41,12 @@ type TransactionParser() =
 
         let xtransaction = XElement.Parse(xml)
         
-        let id          = xtransaction.Element(XNames.TransactionId).Value      |> Guid.Parse
-        let posted      = xtransaction.Element(XNames.TransactionPosted).Value  |> parseDate
-        let entered     = xtransaction.Element(XNames.TransactionEntered).Value |> parseDate
-        let description = xtransaction.Element(XNames.TransactionDescription).Value
-        let currency    = xtransaction.Element(XNames.TransactionCurrency).Element(XNames.CommodityId).Value
-        let xsplits     = xtransaction.Element(XNames.TransactionSplits).Elements() |> Seq.map(parseSplit)
+        let id          = xtransaction |> Value TransactionId           |> Guid.Parse
+        let posted      = xtransaction |> Value TransactionPosted       |> parseDate
+        let entered     = xtransaction |> Value TransactionEntered      |> parseDate
+        let description = xtransaction |> Value TransactionDescription
+        let currency    = xtransaction |> Element TransactionCurrency   |> Value CommodityId
+        let xsplits     = xtransaction |> Element TransactionSplits     |> AllElements |> Seq.map parseSplit
 
-        new Transaction(
-            id, currency, posted, entered, description, xsplits.ToList())
+        new Transaction(id, currency, posted, entered, description, xsplits.ToList())
 

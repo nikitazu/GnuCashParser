@@ -3,9 +3,9 @@
 open System
 open System.Xml.Linq
 
-module XNames =
-    let Book    = XName.Get("book", "http://www.gnucash.org/XML/gnc")
-    let Account = XName.Get("account", "http://www.gnucash.org/XML/gnc")
+module Xml =
+    let XBook    = XName.Get("book", "http://www.gnucash.org/XML/gnc")
+    let XAccount = XName.Get("account", "http://www.gnucash.org/XML/gnc")
 
     let BookId              = XName.Get("id", "http://www.gnucash.org/XML/book")
     let CommodityId         = XName.Get("id", "http://www.gnucash.org/XML/cmdty")
@@ -27,4 +27,9 @@ module XNames =
     let TransactionEntered      = XName.Get("date-entered", "http://www.gnucash.org/XML/trn")
     let TransactionDescription  = XName.Get("description", "http://www.gnucash.org/XML/trn")
     let TransactionSplits       = XName.Get("splits", "http://www.gnucash.org/XML/trn")
+
+    let Element = fun (name:XName) -> fun (x:XElement) -> x.Element(name)
+    let Elements = fun (name:XName) -> fun (x:XElement) -> x.Elements(name)
+    let Value = fun (name:XName) -> fun (x:XElement) -> x.Element(name).Value
+    let AllElements = fun (x:XElement) -> x.Elements()
 

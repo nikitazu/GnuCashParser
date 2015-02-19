@@ -2,6 +2,7 @@
 
 open System
 open System.Xml.Linq
+open Xml
 
 type Account(name : String, aType : String, id : Guid, parentId : Nullable<Guid>, commodity : String) =
     member this.Name = name
@@ -12,24 +13,21 @@ type Account(name : String, aType : String, id : Guid, parentId : Nullable<Guid>
 
 type AccountParser() = 
     member this.Parse(xml) =
-        let xaccount = XElement.Parse(xml)
-        this.ParseElement(xaccount)
+        XElement.Parse xml |> this.ParseElement
 
     member this.ParseElement(xaccount : XElement) =
-        let name    = xaccount.Element(XNames.AccountName).Value
-        let aType   = xaccount.Element(XNames.AccountType).Value
-        let id      = xaccount.Element(XNames.AccountId).Value |> Guid.Parse
+        let name    = xaccount |> Value AccountName
+        let aType   = xaccount |> Value AccountType
+        let id      = xaccount |> Value AccountId |> Guid.Parse
 
-        let commodity = xaccount.Element(XNames.AccountCommodity)
-        let commodityId =
-            if commodity = null
-            then ""
-            else commodity.Element(XNames.CommodityId).Value
+        let commodityId = 
+            match xaccount |> Element AccountCommodity with
+            | null -> ""
+            | commodity -> commodity |> Value CommodityId
 
-        let xparent = xaccount.Element(XNames.AccountParent)
         let parentId = 
-            if xparent = null 
-            then new Nullable<Guid>() 
-            else new Nullable<Guid>(Guid.Parse(xparent.Value))
+            match xaccount |> Element AccountParent with
+            | null -> new Nullable<Guid>()
+            | parent -> new Nullable<Guid>(parent.Value |> Guid.Parse)
 
         new Account(name, aType, id, parentId, commodityId)

@@ -51,7 +51,7 @@
     <None Include="Script.fsx" />
     <None Include="packages.config" />
     <None Include="app.config" />
-    <Compile Include="XNames.fs" />
+    <Compile Include="Xml.fs" />
     <Compile Include="AccountParser.fs" />
     <Compile Include="TransactionParser.fs" />
     <Compile Include="BookParser.fs" />
