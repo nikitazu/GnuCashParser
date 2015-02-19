@@ -33,4 +33,4 @@ module Xml =
     let Elements = fun (name:XName) -> fun (x:XElement) -> x.Elements(name)
     let Value = fun (name:XName) -> fun (x:XElement) -> x.Element(name).Value
     let AllElements = fun (x:XElement) -> x.Elements()
-
+    let DocumentRoot = fun (xml:String) -> XDocument.Parse(xml).Root
