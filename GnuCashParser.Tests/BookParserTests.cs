@@ -328,6 +328,9 @@ namespace GnuCashParser.Tests
 
             List<Account> accounts = book.Accounts;
             List<Transaction> transactions = book.Transactions;
+
+            Assert.AreEqual(3, accounts.Count, "Accounts should be parsed");
+            Assert.AreEqual(3, transactions.Count, "Transactions should be parsed");
         }
     }
 }
