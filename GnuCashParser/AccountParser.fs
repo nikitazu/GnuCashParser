@@ -11,11 +11,8 @@ type Account(name : String, aType : String, id : Guid, parentId : Nullable<Guid>
     member this.ParentId = parentId
     member this.Commodity = commodity
 
-type AccountParser() = 
-    member this.Parse(xml) =
-        XElement.Parse xml |> this.ParseElement
-
-    member this.ParseElement(xaccount : XElement) =
+module AccountParser =
+    let ParseElement(xaccount : XElement) =
         let name    = xaccount |> Value AccountName
         let aType   = xaccount |> Value AccountType
         let id      = xaccount |> Value AccountId |> Guid.Parse
@@ -31,3 +28,6 @@ type AccountParser() =
             | parent -> new Nullable<Guid>(parent.Value |> Guid.Parse)
 
         new Account(name, aType, id, parentId, commodityId)
+    
+    let Parse(xml) =
+        XElement.Parse xml |> ParseElement

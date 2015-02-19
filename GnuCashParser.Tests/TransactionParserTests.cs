@@ -80,8 +80,7 @@ namespace GnuCashParser.Tests
         [TestMethod]
         public void CanParseTransactionXml()
         {
-            TransactionParser parser = new TransactionParser();
-            Transaction transaction = parser.Parse(_xml);
+            Transaction transaction = TransactionParser.Parse(_xml);
 
             CheckIf.EqualId("419124c2108f39c94378c488dda67348", transaction.Id, "Transaction id should be parsed");
             Assert.AreEqual("RUB", transaction.Currency, "Transaction currency should be parsed");

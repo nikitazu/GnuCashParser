@@ -11,15 +11,13 @@ type Book(id, accounts, transactions) =
     member this.Accounts = accounts
     member this.Transactions = transactions
 
-type BookParser() = 
-    member this.Parse(xml) =
+module BookParser =
+    let Parse(xml) =
         let parseAccount = fun (xaccount : XElement) ->
-            let accountParser = new AccountParser()
-            accountParser.ParseElement(xaccount)
+            AccountParser.ParseElement xaccount
 
         let parseTransaction = fun (xtransaction : XElement) ->
-            let transactionParser = new TransactionParser()
-            transactionParser.ParseElement(xtransaction)
+            TransactionParser.ParseElement xtransaction
 
         let xbook       = XDocument.Parse(xml).Root |> Element XBook
         let id          = xbook |> Value BookId |> Guid.Parse

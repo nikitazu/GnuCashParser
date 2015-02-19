@@ -323,8 +323,7 @@ namespace GnuCashParser.Tests
         [TestMethod]
         public void CanParseBookXml()
         {
-            BookParser parser = new BookParser();
-            Book book = parser.Parse(_xml);
+            Book book = BookParser.Parse(_xml);
             CheckIf.EqualId("3dd199f14b9d79e170caa4653fa152f2", book.Id, "Book id should be parsed");
 
             List<Account> accounts = book.Accounts;

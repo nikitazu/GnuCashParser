@@ -21,11 +21,8 @@ type Transaction(id : Guid, currency : String, posted : DateTime, entered : Date
     member this.Description = description
     member this.Splits = splits
 
-type TransactionParser() = 
-    member this.Parse(xml) =
-        xml |> XElement.Parse |> this.ParseElement
-
-    member this.ParseElement(xtransaction : XElement) =
+module TransactionParser = 
+    let ParseElement(xtransaction : XElement) =
         let parseMoney = fun (value : string) ->
             let parts       = value.Split '/'
             let divisible   = parts.[0] |> Decimal.Parse
@@ -51,3 +48,5 @@ type TransactionParser() =
 
         new Transaction(id, currency, posted, entered, description, xsplits.ToList())
 
+    let Parse(xml) =
+        XElement.Parse xml |> ParseElement

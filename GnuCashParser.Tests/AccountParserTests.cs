@@ -32,8 +32,7 @@ namespace GnuCashParser.Tests
         [TestMethod]
         public void CanParseAccountXml()
         {
-            AccountParser parser = new AccountParser();
-            Account account = parser.Parse(_xml);
+            Account account = AccountParser.Parse(_xml);
             Assert.AreEqual("Сбер-вклад", account.Name, "Account name should be parsed");
             Assert.AreEqual("BANK", account.Type, "Account type should be parsed");
             CheckIf.EqualId("5a977b5e74b8dbaa94239d15c889798d", account.Id, "Account id should be parsed");
